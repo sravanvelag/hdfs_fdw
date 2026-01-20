@@ -75,10 +75,11 @@ public class HiveJdbcClient
 		return (-1);
 	}
 
-	/* signature will be (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIILMsgBuf;)I */
+	/* signature will be (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIIZLMsgBuf;)I */
 	public int DBOpenConnection(String host, int port, String userName, String password,
 								String connStr, int connectTimeout, int receiveTimeout,
-								int authType, int clientType, MsgBuf errBuf)
+								int authType, int clientType,
+								boolean m_isDebug, MsgBuf errBuf)
 	{
 		int index;
 		String hst;

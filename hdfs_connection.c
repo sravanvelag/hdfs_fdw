@@ -58,6 +58,7 @@ hdfs_get_connection(ForeignServer *server, hdfs_opt *opt)
 							opt->receive_timeout,
 							opt->auth_type,
 							opt->client_type,
+							true,
 							&err_buf);
 	if (conn < 0)
 		ereport(ERROR,
