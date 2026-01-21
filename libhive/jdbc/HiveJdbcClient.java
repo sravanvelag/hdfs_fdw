@@ -188,7 +188,11 @@ public class HiveJdbcClient
 					}
 					else
 					{
+						if (m_isDebug)
+							System.out.println("HiveJdbcClient::DBOpenConnection before DriverManager.getConnection" + conURL);
 						m_hdfsConnection[index] = DriverManager.getConnection(conURL, userName, password);
+						if (m_isDebug)
+							System.out.println("HiveJdbcClient::DBOpenConnection after DriverManager.getConnection" + conURL + "m_hdfsConnection[index] is " + m_hdfsConnection[index] == null ? "null" : "not null");
 					}
 					break;
 
