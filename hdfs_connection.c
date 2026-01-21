@@ -23,7 +23,7 @@
 int
 hdfs_get_connection(ForeignServer *server, hdfs_opt *opt)
 {
-	int			conn;
+	int			conn = -1;
 	char	   *err_buf = "unknown";
 	StringInfoData connstr;
 
