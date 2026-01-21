@@ -79,12 +79,13 @@ public class HiveJdbcClient
 	public int DBOpenConnection(String host, int port, String userName, String password,
 								String connStr, int connectTimeout, int receiveTimeout,
 								int authType, int clientType,
-								boolean m_isDebug, MsgBuf errBuf)
+								boolean isDebug, MsgBuf errBuf)
 	{
 		int index;
 		String hst;
 		String usr;
 
+		m_isDebug = isDebug;
 		if (m_isDebug)
 			System.out.println("HiveJdbcClient::DBOpenConnection");
 
@@ -189,10 +190,10 @@ public class HiveJdbcClient
 					else
 					{
 						if (m_isDebug)
-							System.out.println("HiveJdbcClient::DBOpenConnection before DriverManager.getConnection" + conURL);
+							System.out.println("HiveJdbcClient::DBOpenConnection before DriverManager.getConnection");
 						m_hdfsConnection[index] = DriverManager.getConnection(conURL, userName, password);
 						if (m_isDebug)
-							System.out.println("HiveJdbcClient::DBOpenConnection after DriverManager.getConnection" + conURL + "m_hdfsConnection[index] is " + m_hdfsConnection[index] == null ? "null" : "not null");
+							System.out.println("HiveJdbcClient::DBOpenConnection after DriverManager.getConnection m_hdfsConnection[index] is " + m_hdfsConnection[index] == null ? "null" : "not null");
 					}
 					break;
 
