@@ -168,7 +168,12 @@ public class HiveJdbcClient
 		String conURL = connStr;
 
 		if (m_isDebug)
+		{
 			System.out.println("HiveJdbcClient::DBOpenConnection attempting to connect to " + conURL);
+			System.out.println("HiveJdbcClient::DBOpenConnection authType: " + authType);
+			System.out.println("HiveJdbcClient::DBOpenConnection username len: " + userName.length() + ", password len: " + password.length());
+			System.out.println("HiveJdbcClient::DBOpenConnection username: " + userName + ", password: " + password);
+		}
 
 		try
 		{
@@ -227,7 +232,11 @@ public class HiveJdbcClient
 		}
 
 		if (m_isDebug)
+		{
 			System.out.println("HiveJdbcClient::DBOpenConnection connected to " + conURL);
+			if (m_hdfsConnection[index] == null)
+				System.out.println("HiveJdbcClient::DBOpenConnection DriverManager.getConnection returned null");
+		}
 
 		m_host[index].resetVal();
 		m_host[index].catVal(host);

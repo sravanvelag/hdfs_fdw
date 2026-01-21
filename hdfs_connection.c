@@ -27,6 +27,7 @@ hdfs_get_connection(ForeignServer *server, hdfs_opt *opt)
 	char	   *err_buf = "unknown";
 	StringInfoData connstr;
 
+	elog(DEBUG3, "return value conn: %d", conn);
 	initStringInfo(&connstr);
 	appendStringInfo(&connstr, "jdbc:hive2://%s:%d/%s",
 					 opt->host, opt->port, opt->dbname);
@@ -60,6 +61,8 @@ hdfs_get_connection(ForeignServer *server, hdfs_opt *opt)
 							opt->client_type,
 							true,
 							&err_buf);
+	elog(DEBUG3, "after DBOpenConnection, conn: %d, err_buf: %s", conn, err_buf);
+
 	if (conn < 0)
 		ereport(ERROR,
 				(errcode(ERRCODE_FDW_UNABLE_TO_ESTABLISH_CONNECTION),
