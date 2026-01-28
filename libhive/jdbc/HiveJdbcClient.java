@@ -235,6 +235,16 @@ public class HiveJdbcClient
 			m_isFree[index] = true;
 			return (-5);
 		}
+		catch (Exception ex)
+		{
+			if (m_isDebug)
+			{
+				System.out.println("HiveJdbcClient::DBOpenConnection could not connect to " + conURL);
+				System.out.println("An exception occurred: " + ex.getMessage());
+			}
+			m_isFree[index] = true;
+			return (-5);
+		}
 
 		if (m_isDebug)
 		{
