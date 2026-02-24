@@ -155,6 +155,70 @@ public class HiveJdbcClient
 		try
 		{
 			Class.forName(m_driverName);
+
+			// Preload classes to avoid NoClassDefFoundError in JNI environments
+			// In JNI, classes loaded during connection setup may not be found by classloader
+			// Preloading forces them into the classloader during driver initialization
+
+			// Woodstox XML parser classes (used by Hive 3.x, removed in Hive 4.1+)
+			try
+			{
+				Class.forName("com.ctc.wstx.io.InputBootstrapper");
+				Class.forName("com.ctc.wstx.api.ReaderConfig");
+				Class.forName("com.ctc.wstx.stax.WstxInputFactory");
+				Class.forName("org.codehaus.stax2.XMLStreamReader2");
+				if (m_isDebug)
+					System.out.println("HiveJdbcClient: Preloaded Woodstox classes");
+			}
+			catch (ClassNotFoundException e)
+			{
+				// Woodstox not in this version (e.g., Hive 4.1+) - not an error
+				if (m_isDebug)
+					System.out.println("HiveJdbcClient: Woodstox not found (may be Hive 4.1+ which uses native XML parser)");
+			}
+
+			// Commons-logging (used by some Hive versions for logging facades)
+			// Try both original and shaded package names (Hive 4.x uses shaded)
+			try
+			{
+				// Try original package name first (Hive 3.x)
+				Class.forName("org.apache.commons.logging.LogFactory");
+				Class.forName("org.apache.commons.logging.Log");
+				if (m_isDebug)
+					System.out.println("HiveJdbcClient: Preloaded commons-logging classes (original package)");
+			}
+			catch (ClassNotFoundException e)
+			{
+				// Try shaded package name (Hive 4.x standalone JARs)
+				try
+				{
+					Class.forName("org.apache.hive.org.apache.commons.logging.LogFactory");
+					Class.forName("org.apache.hive.org.apache.commons.logging.Log");
+					if (m_isDebug)
+						System.out.println("HiveJdbcClient: Preloaded commons-logging classes (shaded package)");
+				}
+				catch (ClassNotFoundException e2)
+				{
+					// Not in this version or not needed - not an error
+					if (m_isDebug)
+						System.out.println("HiveJdbcClient: commons-logging not found (neither original nor shaded)");
+				}
+			}
+
+			// Hadoop security classes (used by Hive 4.0+ for delegation tokens)
+			try
+			{
+				Class.forName("org.apache.hadoop.security.token.DelegationTokenIssuer");
+				Class.forName("org.apache.hadoop.security.token.Token");
+				if (m_isDebug)
+					System.out.println("HiveJdbcClient: Preloaded Hadoop security classes");
+			}
+			catch (ClassNotFoundException e)
+			{
+				// Not in this version or standalone JAR - not necessarily an error
+				if (m_isDebug)
+					System.out.println("HiveJdbcClient: Hadoop security classes not found");
+			}
 		}
 		catch (ClassNotFoundException e)
 		{

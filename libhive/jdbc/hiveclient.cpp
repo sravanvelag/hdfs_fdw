@@ -430,6 +430,19 @@ int DBOpenConnection(char *host, int port, char *username, char *password,
 							m_isDebug,
 							g_objMsgBuf);
 
+	/* Check for uncaught Java exceptions */
+	if (g_jni->ExceptionCheck())
+	{
+		/* Print exception details to stderr for debugging */
+		g_jni->ExceptionDescribe();
+		/* Clear the exception to prevent it from propagating */
+		g_jni->ExceptionClear();
+		/* Set error message */
+		*errBuf = (char *)"Uncaught Java exception during DBOpenConnection";
+		/* Return error code consistent with connection failure */
+		return -5;
+	}
+
 	rv = (jstring)g_jni->CallObjectMethod(g_objMsgBuf, g_getVal);
 	*errBuf = (char *)g_jni->GetStringUTFChars(rv, &isCopy);
 
