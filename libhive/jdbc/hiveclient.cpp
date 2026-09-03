@@ -94,11 +94,11 @@ int Initialize()
     sprintf(libjvm, "%s/%s", g_jvmpath, "libjvm.so");
 
     hdfs_dll_handle = dlopen(libjvm, RTLD_LAZY);
+    delete[] libjvm;
     if(hdfs_dll_handle == NULL)
     {
         return -1;
     }
-    delete[] libjvm;
 
     _JNI_CreateJavaVM = (_JNI_CreateJavaVM_PTR)dlsym(hdfs_dll_handle, "JNI_CreateJavaVM");
 
